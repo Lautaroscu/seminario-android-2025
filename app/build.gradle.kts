@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.parcelizeKotlinAndroid)
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.compose.compiler)
 }
 val localProperties = gradleLocalProperties(rootDir,
     providers
@@ -29,7 +30,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
-
+        compose = true
     }
 
     buildTypes {
@@ -73,6 +74,14 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.glide)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.materail3)
+    implementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui.tooling.preview.android)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
