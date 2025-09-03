@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.compose.materail3)
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.glide.compose)
 
 
     testImplementation(libs.junit)

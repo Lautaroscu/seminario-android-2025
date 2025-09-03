@@ -10,7 +10,7 @@ data class GameDTO(
     @SerializedName("name")
     val name: String,
     @SerializedName("released")
-    val released: String?,
+    val released: String,
     @SerializedName("background_image")
     val backgroundImage: String?,
 //    val rating: Double,

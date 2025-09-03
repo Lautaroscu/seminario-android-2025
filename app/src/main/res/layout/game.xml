@@ -18,7 +18,6 @@
             android:layout_height="180dp"
             android:scaleType="centerCrop"
             android:contentDescription="@string/game_image"
-            android:foreground="?attr/selectableItemBackground"
            />
 
         <LinearLayout
