@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Seminario2025">
         <activity
-            android:name="ar.edu.unicen.seminario2025.ui.features.games.GamesActivity"
+            android:name="ar.edu.unicen.seminario2025.AppActivity"
             android:exported="true"
            >
             <intent-filter>

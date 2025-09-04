@@ -81,6 +81,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.glide.compose)
+    implementation(libs.androidx.navigation.compose)
 
 
     testImplementation(libs.junit)

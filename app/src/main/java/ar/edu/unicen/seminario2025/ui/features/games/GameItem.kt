@@ -21,7 +21,7 @@ fun GameItem(
     released: String,
     backgroundImage: String?,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+        onClick: (() -> Unit)? = null
 ) {
     Card(
         modifier = modifier

@@ -6,7 +6,7 @@ import javax.inject.Singleton
 @Singleton
 class GamesLocalDataSource {
     suspend fun getGames(): List<GameDTO> = listOf(
-        GameDTO(1, "slug-1", "name1" , "" , "" ),
-        GameDTO(2, "slug-2", "name2" , "" , "" )
+        GameDTO(1, "slug-1", "name1" , ""  ),
+        GameDTO(2, "slug-2", "name2" , ""  )
     )
 }
