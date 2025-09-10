@@ -10,14 +10,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDTO
+import ar.edu.unicen.seminario2025.ui.common.EmptyGamesView
 
 @Composable
 fun GamesList(
     games: List<GameDTO>,
     isLoading: Boolean ,
-    onGameClicked: (gameId : Int) -> Unit
+    onGameClicked: (gameId : Int) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
+        if(games.isEmpty() && !isLoading){
+            EmptyGamesView()
+        }
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {

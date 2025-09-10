@@ -26,7 +26,7 @@ fun GameSearchBar(
         value = text,
         onValueChange = {
             text = it
-            onQueryChange(it)  // actualiza el estado externo
+            onQueryChange(it)
         },
         modifier = modifier
             .fillMaxWidth()

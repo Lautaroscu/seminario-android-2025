@@ -10,5 +10,9 @@ data class GameDTO(
     @SerializedName("released")
     val released: String,
     @SerializedName("background_image")
-    val backgroundImage: String?
+    val backgroundImage: String? = null,
+    @SerializedName("rating")
+    val rating: Float? = 0F,
+    @SerializedName("platforms")
+    val platforms: List<PlatformWrapperDTO>? = null,
 )

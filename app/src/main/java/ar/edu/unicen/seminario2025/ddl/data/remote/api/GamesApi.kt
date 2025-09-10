@@ -9,15 +9,19 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GamesApi {
-    //get All
-    @GET("games")
-    suspend fun getGames(
-        @Query("key") apiKey : String ,
-        @Query("page_size") pageSize : Int = 20
-    ): Response<GamesResponse>
+        @GET("games")
+        suspend fun getGames(
+            @Query("key") apiKey: String,
+            @Query("search") search: String? = null,
+            @Query("platforms") platforms: String? = null,
+            @Query("dates") dates: String? = null,
+            @Query("rating") rating: Float? = null,
+            @Query("page_size") pageSize: Int = 20,
+            @Query("ordering") ordering: String? = null
+        ): Response<GamesResponse>
 
     //get By Id
-    @GET("game/{id}")
+    @GET("games/{id}")
     suspend fun getGame(
         @Path("id") id : Int ,
         @Query("key") apiKey : String

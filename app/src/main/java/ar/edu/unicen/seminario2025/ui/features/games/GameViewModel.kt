@@ -17,14 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val gamesRepository: GamesRepository ,
-    savedStateHandle: SavedStateHandle
+    private val gamesRepository: GamesRepository
 ) : ViewModel(){
     private val _game = MutableStateFlow<GameDetailsDTO?>(
         null
     )
-    private val gameId: Int = savedStateHandle["id"] ?: -1
-
     val game = _game.asStateFlow()
     private val _loading  = MutableStateFlow<Boolean>(false)
     val loading : StateFlow <Boolean> = _loading.asStateFlow()
@@ -32,11 +29,8 @@ class GameViewModel @Inject constructor(
     private val _error = MutableStateFlow<Boolean>(false)
     val error : StateFlow<Boolean> = _error.asStateFlow()
 
-    init {
-        getGame()
-    }
 
-    fun getGame() {
+    fun getGame(gameId : Int) {
         viewModelScope.launch {
             _loading.value = true
             when (val result = gamesRepository.getGame(gameId)) {

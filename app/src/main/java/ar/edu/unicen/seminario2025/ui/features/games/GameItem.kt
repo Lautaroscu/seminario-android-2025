@@ -18,7 +18,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 @Composable
 fun GameItem(
     name: String,
-    released: String,
+    released: String = "2022-09-15",
     backgroundImage: String?,
     modifier: Modifier = Modifier,
         onClick: (() -> Unit)? = null

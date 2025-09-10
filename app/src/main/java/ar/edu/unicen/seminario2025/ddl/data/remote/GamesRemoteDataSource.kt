@@ -1,5 +1,6 @@
 package ar.edu.unicen.seminario2025.ddl.data.remote
 
+import FiltersDTO
 import ar.edu.unicen.seminario2025.BuildConfig
 import ar.edu.unicen.seminario2025.ddl.data.remote.api.ApiResult
 import ar.edu.unicen.seminario2025.ddl.data.remote.api.GamesApi
@@ -14,9 +15,25 @@ class GamesRemoteDataSource @Inject constructor(
 ) {
     private val apiKey : String = BuildConfig.API_KEY
 
-    suspend fun getGames(): List<GameDTO> {
+    suspend fun getGames(filtersDTO: FiltersDTO? ): List<GameDTO> {
         return withContext(Dispatchers.IO) {
-            val response = gamesApi.getGames(apiKey)
+            val query = filtersDTO?.query
+            val rating = filtersDTO?.minRating
+
+            var  platforms = filtersDTO?.platforms?.joinToString(",")
+            if(platforms?.isEmpty() == true) {
+                platforms = null
+            }
+            val dates = filtersDTO?.year?.let { "$it,${it}" }
+            val order = filtersDTO?.order
+            val response = gamesApi.getGames(
+                apiKey = apiKey ,
+                search = query,
+                platforms = platforms,
+                dates = dates,
+                rating = rating,
+                ordering = order?.apiValue
+            )
             if (response.isSuccessful) {
                 response.body()?.results ?: emptyList()
             } else {
@@ -24,6 +41,18 @@ class GamesRemoteDataSource @Inject constructor(
             }
         }
     }
+    suspend fun searchGames(query : String): List<GameDTO> {
+        return withContext(Dispatchers.IO) {
+            val response = gamesApi.getGames(apiKey , query)
+            if (response.isSuccessful) {
+                response.body()?.results ?: emptyList()
+            } else {
+                emptyList()
+            }
+        }
+    }
+
+
 
 
     suspend fun getGame(gameId: Int): ApiResult<GameDetailsDTO> {

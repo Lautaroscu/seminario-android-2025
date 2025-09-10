@@ -1,51 +1,77 @@
 package ar.edu.unicen.seminario2025.ui.features.games
 
+
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import ar.edu.unicen.seminario2025.ui.common.EmptyGamesView
 import ar.edu.unicen.seminario2025.ui.common.GameSearchBar
+import ar.edu.unicen.seminario2025.R
+
 
 @Composable
 fun GamesScreen(
     viewModel: GamesViewModel,
-    goDetails : (gameId : Int) -> Unit
+    goDetails : (gameId : Int) -> Unit ,
+    goFilters : () -> Unit
 ) {
     val games = viewModel.games.collectAsState().value
     val isLoading = viewModel.loading.collectAsState().value
-    var query by remember { mutableStateOf("") }
+    val query = viewModel.query.collectAsState().value
     Column(
         modifier = Modifier
             .fillMaxSize()
-            // Aplicamos el padding de systemBars
-            .padding(
-                WindowInsets.systemBars
-                    .asPaddingValues() // Convierte a PaddingValues
-            )) {
-        Spacer(Modifier.size(10.dp))
+    ) {
         GameSearchBar(
             query = query,
-            onQueryChange = { query = it },
+            onQueryChange = { viewModel.updateQuery(it) },
             onSearch = {
 
             }
         )
-        GamesList(
-            games = games,
-            isLoading = isLoading,
-            onGameClicked = goDetails ,
-        )
+        Spacer(Modifier.size(35.dp))
+
+        Row(
+            modifier = Modifier
+                .clickable { goFilters() }
+                .padding(8.dp)
+                .align(Alignment.End)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_filter_list_24),
+                contentDescription = "Filtros",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = "Filtros",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+
+            GamesList(
+                games = games,
+                isLoading = isLoading,
+                onGameClicked = goDetails ,
+            )
+
     }
 }
+
