@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ar.edu.unicen.seminario2025.ui.common.ErrorCard
 
 @Composable
 fun GameDetailsScreen(
@@ -54,25 +55,10 @@ fun GameDetailsScreen(
                         }
 
                         game == null || error -> {
-                                Card(
-                                        colors = CardDefaults.cardColors(
-                                                containerColor = MaterialTheme.colorScheme.errorContainer
-                                        ),
-                                        shape = RoundedCornerShape(12.dp),
-                                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-                                        modifier = Modifier
-                                                .padding(16.dp)
-                                                .fillMaxWidth(0.9f)
-                                ) {
-                                        Text(
-                                                text = "Ocurrio un error al cargar el juego",
-                                                style = MaterialTheme.typography.bodyMedium.copy(
-                                                        color = MaterialTheme.colorScheme.onErrorContainer
-                                                ),
-                                                modifier = Modifier.padding(16.dp),
-                                                textAlign = TextAlign.Center
-                                        )
-                                }
+                                ErrorCard(
+                                        message = "Ocurrió un error al cargar el juego",
+                                        onRetry = { gameViewModel.getGame(gameId) }
+                                )
                         }
 
                         else -> {

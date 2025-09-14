@@ -16,7 +16,7 @@ interface GamesApi {
             @Query("platforms") platforms: String? = null,
             @Query("dates") dates: String? = null,
             @Query("rating") rating: Float? = null,
-            @Query("page_size") pageSize: Int = 20,
+            @Query("page_size") pageSize: Int = 500,
             @Query("ordering") ordering: String? = null
         ): Response<GamesResponse>
 

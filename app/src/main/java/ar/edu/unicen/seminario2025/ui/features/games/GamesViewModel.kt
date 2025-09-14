@@ -3,7 +3,9 @@ package ar.edu.unicen.seminario2025.ui.features.games
 import FiltersDTO
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ar.edu.unicen.seminario2025.ddl.data.remote.api.ApiResult
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDTO
+import ar.edu.unicen.seminario2025.ddl.models.games.PlatformDTO
 import ar.edu.unicen.seminario2025.ddl.repository.GamesRepository
 import ar.edu.unicen.seminario2025.ui.features.games.enums.SortOption
 import ar.edu.unicen.seminario2025.utils.AvailableFiltersPreferences
@@ -31,9 +33,6 @@ class GamesViewModel @Inject constructor(
     private val _loading = MutableStateFlow<Boolean>(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
-    private val _query = MutableStateFlow("")
-    val query: StateFlow<String> = _query
-
     private val _years = MutableStateFlow<List<Int>>(emptyList())
     val years: StateFlow<List<Int>> = _years
     private val _platforms = MutableStateFlow<List<Pair<Int, String>>>(emptyList())
@@ -41,6 +40,11 @@ class GamesViewModel @Inject constructor(
 
     private val _savedFilters = MutableStateFlow<FiltersDTO>(filtersPreferences.getFilters())
      val savedFilters: StateFlow<FiltersDTO> = _savedFilters
+    private val _query = MutableStateFlow<String>(savedFilters.value.query ?: "")
+    val query: StateFlow<String> = _query
+
+    private var _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
 
 
 
@@ -53,17 +57,16 @@ class GamesViewModel @Inject constructor(
     fun onApplyFilters(filters: FiltersDTO) {
         viewModelScope.launch {
             _loading.value = true
-            val result = gamesRepository.getGames(filters)
-            _games.value = result
+            when (val result = gamesRepository.getGames(filters)) {
+                is ApiResult.Success -> _games.value = result.data
+                is ApiResult.Error -> _error.value = result.error
+            }
             _loading.value = false
-            filtersPreferences.saveFilters(filters)
-            _savedFilters.value = filters
         }
     }
 
     init {
         getGames()
-        filtersPreferences.clearFilters()
     }
 
     @OptIn(FlowPreview::class)
@@ -73,17 +76,13 @@ class GamesViewModel @Inject constructor(
                 .debounce(500)
                 .distinctUntilChanged()
                 .collect { query ->
-                    _loading.value = true
-
-                    val filters = _savedFilters
-                    filters.value.query = query
-                    val result = gamesRepository.getGames(filters.value)
-                    _games.value = result
+                    val filters = _savedFilters.value.copy(query = query)
+                    onApplyFilters(filters)
                     updateFiltersFromGames()
-                    _loading.value = false
                 }
         }
     }
+
 
 
     private fun getPlatformsToFilter(): List<Pair<Int, String>> {
@@ -98,6 +97,7 @@ class GamesViewModel @Inject constructor(
                     platforms.add(id to name)
                 }
             }
+            availableFiltersPreferences.savePlatforms(platforms.map { PlatformDTO(it.first, it.second , it.second) }.toSet())
         }else {
             platforms.addAll(savedPlatforms.map { it.id to it.name })
         }
@@ -108,8 +108,8 @@ class GamesViewModel @Inject constructor(
 
     private fun getYearsToFilter(): List<Int> {
         val years = mutableSetOf<Int>()
-        games.value.forEach { game ->
-            years.add(game.released.split("-")[0].toInt())
+       for(i in 2000 .. 2024) {
+           years.add(i)
         }
         return years.toSortedSet().toList()
     }

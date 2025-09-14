@@ -45,7 +45,6 @@ fun GameDetailsScreenContent(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        // Imagen principal
         game.backgroundImage?.let { imageUrl ->
             GlideImage(
                 model = imageUrl,
@@ -59,7 +58,6 @@ fun GameDetailsScreenContent(
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Nombre y fecha
         Text(
             text = game.name,
             style = MaterialTheme.typography.headlineSmall,
@@ -82,7 +80,6 @@ fun GameDetailsScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Rating
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "⭐ ${game.rating} / ${game.ratingTop}",
@@ -98,7 +95,6 @@ fun GameDetailsScreenContent(
             )
         }
 
-        // Metacritic adaptado
         game.metacritic?.let { score ->
             Spacer(modifier = Modifier.height(8.dp))
             val metacriticColor = when {
@@ -115,7 +111,7 @@ fun GameDetailsScreenContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Plataformas
+
         game.platforms?.let { platforms ->
             Text(
                 text = "Plataformas:",
@@ -145,7 +141,6 @@ fun GameDetailsScreenContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Última actualización
         Text(
             text = "Última actualización: ${game.updated}",
             style = MaterialTheme.typography.bodySmall,

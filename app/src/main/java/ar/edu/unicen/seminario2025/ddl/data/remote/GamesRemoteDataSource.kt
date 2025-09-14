@@ -6,72 +6,55 @@ import ar.edu.unicen.seminario2025.ddl.data.remote.api.ApiResult
 import ar.edu.unicen.seminario2025.ddl.data.remote.api.GamesApi
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDTO
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDetailsDTO
+import ar.edu.unicen.seminario2025.utils.safeApiCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class GamesRemoteDataSource @Inject constructor(
    private val gamesApi: GamesApi
 ) {
-    private val apiKey : String = BuildConfig.API_KEY
+    private val apiKey: String = BuildConfig.API_KEY
 
-    suspend fun getGames(filtersDTO: FiltersDTO? ): List<GameDTO> {
-        return withContext(Dispatchers.IO) {
+    suspend fun getGames(filtersDTO: FiltersDTO?): ApiResult<List<GameDTO>> {
+        return safeApiCall {
             val query = filtersDTO?.query
             val rating = filtersDTO?.minRating
-
-            var  platforms = filtersDTO?.platforms?.joinToString(",")
-            if(platforms?.isEmpty() == true) {
+            var platforms = filtersDTO?.platforms?.joinToString(",")
+            if (platforms?.isEmpty() == true) {
                 platforms = null
             }
-            val dates = filtersDTO?.year?.let { "$it,${it}" }
+            val dates = filtersDTO?.year?.let { "$it,$it" }
             val order = filtersDTO?.order
+
             val response = gamesApi.getGames(
-                apiKey = apiKey ,
+                apiKey = apiKey,
                 search = query,
                 platforms = platforms,
                 dates = dates,
                 rating = rating,
                 ordering = order?.apiValue
             )
+
             if (response.isSuccessful) {
                 response.body()?.results ?: emptyList()
             } else {
-                emptyList()
+                throw HttpException(response)
             }
         }
     }
-    suspend fun searchGames(query : String): List<GameDTO> {
-        return withContext(Dispatchers.IO) {
-            val response = gamesApi.getGames(apiKey , query)
-            if (response.isSuccessful) {
-                response.body()?.results ?: emptyList()
-            } else {
-                emptyList()
-            }
-        }
-    }
-
-
 
 
     suspend fun getGame(gameId: Int): ApiResult<GameDetailsDTO> {
-        return try {
+        return safeApiCall {
             val response = gamesApi.getGame(gameId, apiKey)
             if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null) {
-                    ApiResult.Success(body)
-                } else {
-                    ApiResult.Error(Exception("Empty body"))
-                }
+                response.body() ?: throw IOException("Response body is null")
             } else {
-                ApiResult.Error(Exception("Error ${response.code()}: ${response.message()}"))
+                throw HttpException(response)
             }
-        } catch (e: Exception) {
-            ApiResult.Error(e)
         }
     }
-
-
 }

@@ -1,14 +1,19 @@
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -85,7 +90,8 @@ fun GameFiltersAndSort(
                 )
                 years.forEach { year ->
                     DropdownMenuItem(
-                        text = { Text(year.toString()) },
+                        text = {Text(year.toString())
+                        },
                         onClick = {
                             selectedYear = year.toString()
                             expandedYear = false
@@ -152,22 +158,50 @@ fun GameFiltersAndSort(
                     }
                 }
             }
-
-            Button(
-                onClick = {
-                    onApplyFilters(
-                        FiltersDTO(
-                            year = selectedYear,
-                            minRating = minRating,
-                            platforms = selectedPlatforms.toList(),
-                            order = selectedSort
-                        )
-                    )
-                },
-                modifier = Modifier.align(Alignment.End)
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp , bottom = 4.dp),
             ) {
-                Text("Aplicar")
+                Button(
+                    onClick = {
+                        onApplyFilters(
+                            FiltersDTO(
+                                year = selectedYear,
+                                minRating = minRating.let { if (it == 0f) null else it },
+                                platforms = selectedPlatforms.let { if (it.isEmpty()) null else it },
+                                order = selectedSort
+                            )
+                        )
+                    }
+                ) {
+                    Text("Aplicar")
+                }
+                OutlinedButton(
+                    onClick = {
+                        onApplyFilters(
+                            FiltersDTO(
+                                year = null,
+                                minRating = null,
+                                platforms = null,
+                                order = null
+                            )
+                        )
+                        selectedYear = null
+                        minRating = 0f
+                        selectedPlatforms.clear()
+                        selectedSort = SortOption.RATING_DESC
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                ) {
+                    Text("Borrar filtros")
+                }
             }
+
+
         }
     }
 }

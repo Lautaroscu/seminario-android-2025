@@ -1,5 +1,6 @@
 package ar.edu.unicen.seminario2025.ui.features.games
 
+import GameImage
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,19 +10,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun GameItem(
     name: String,
-    released: String = "2022-09-15",
+    released: String,
     backgroundImage: String?,
     modifier: Modifier = Modifier,
-        onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null
 ) {
     Card(
         modifier = modifier
@@ -33,14 +32,15 @@ fun GameItem(
     ) {
         Column(
         ) {
-            GlideImage(
-                modifier = Modifier.height(190.dp) ,
-                model = backgroundImage,
-                contentDescription = "Game background",
-                contentScale = ContentScale.Crop // recorta proporcionalmente la imagen
+
+           GameImage(
+               imageUrl = backgroundImage,
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .height(200.dp)
+           )
 
 
-            )
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
                     text = name,
@@ -56,3 +56,5 @@ fun GameItem(
         }
     }
 }
+
+

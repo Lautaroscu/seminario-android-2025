@@ -2,6 +2,7 @@ package ar.edu.unicen.seminario2025.ui.features.games
 
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import ar.edu.unicen.seminario2025.ui.common.EmptyGamesView
 import ar.edu.unicen.seminario2025.ui.common.GameSearchBar
 import ar.edu.unicen.seminario2025.R
+import ar.edu.unicen.seminario2025.ui.common.ErrorCard
 
 
 @Composable
@@ -34,6 +36,24 @@ fun GamesScreen(
     val games = viewModel.games.collectAsState().value
     val isLoading = viewModel.loading.collectAsState().value
     val query = viewModel.query.collectAsState().value
+    val error = viewModel.error.collectAsState().value
+
+    if(error != null && !error.isEmpty()){
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ){
+            ErrorCard(
+                message = error,
+                onRetry = {
+                    viewModel.getGames()
+                },
+                modifier = Modifier.align(Alignment.Center)
+
+            )
+        }
+
+        return
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()

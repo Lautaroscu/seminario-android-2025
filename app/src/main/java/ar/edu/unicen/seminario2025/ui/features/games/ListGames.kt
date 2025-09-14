@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDTO
 import ar.edu.unicen.seminario2025.ui.common.EmptyGamesView
+import ar.edu.unicen.seminario2025.ui.common.ErrorCard
 
 @Composable
 fun GamesList(
@@ -32,7 +33,7 @@ fun GamesList(
                 items(games) { game ->
                     GameItem(
                         name = game.name,
-                        released = game.released,
+                        released = game?.released ?: "2025-04-02",
                         backgroundImage = game.backgroundImage,
                         onClick = {
                             onGameClicked(game.id)

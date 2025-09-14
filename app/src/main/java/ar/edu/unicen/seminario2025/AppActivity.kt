@@ -42,7 +42,6 @@ class AppActivity : AppCompatActivity() {
                 ) {
                     composable(
                         route = "games",
-
                         ) {
 
                         GamesScreen(
