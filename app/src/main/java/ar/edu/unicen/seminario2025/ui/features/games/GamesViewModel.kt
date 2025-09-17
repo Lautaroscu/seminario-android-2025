@@ -54,14 +54,21 @@ class GamesViewModel @Inject constructor(
         _query.value = newQuery
     }
 
-    fun onApplyFilters(filters: FiltersDTO) {
+    fun onApplyFilters(filters: FiltersDTO = savedFilters.value) {
         viewModelScope.launch {
             _loading.value = true
             when (val result = gamesRepository.getGames(filters)) {
-                is ApiResult.Success -> _games.value = result.data
+                is ApiResult.Success -> {
+                    _games.value = result.data
+                    _error.value = null
+                }
                 is ApiResult.Error -> _error.value = result.error
             }
             _loading.value = false
+            filtersPreferences.saveFilters(filters)
+            _savedFilters.value = filters
+            updateFiltersFromGames()
+
         }
     }
 
@@ -78,7 +85,6 @@ class GamesViewModel @Inject constructor(
                 .collect { query ->
                     val filters = _savedFilters.value.copy(query = query)
                     onApplyFilters(filters)
-                    updateFiltersFromGames()
                 }
         }
     }
@@ -117,5 +123,6 @@ class GamesViewModel @Inject constructor(
         _platforms.value = getPlatformsToFilter()
         _years.value = getYearsToFilter()
     }
+
 }
 

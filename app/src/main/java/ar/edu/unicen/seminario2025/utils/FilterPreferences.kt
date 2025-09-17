@@ -23,15 +23,43 @@ class FiltersPreferences @Inject constructor(context: Context) {
     }
 
     fun saveFilters(filters: FiltersDTO) {
+        if (filters.query.isNullOrEmpty()) {
+            filters.query = null
+        }
+
         prefs.edit {
-            putString(KEY_YEAR, filters.year)
-            putFloat(KEY_MIN_RATING, filters.minRating?.toFloat() ?: 0F)
-            putString(KEY_PLATFORMS, filters.platforms?.joinToString(","))
-            putString(KEY_SORT, filters.order?.name)
-            putString(KEY_QUERY , filters.query)
-            apply()
+            if (filters.year != null) {
+                putString(KEY_YEAR, filters.year)
+            } else {
+                remove(KEY_YEAR)
+            }
+
+            if (filters.minRating != null && filters.minRating != 0f) {
+                putFloat(KEY_MIN_RATING, filters.minRating!!)
+            } else {
+                remove(KEY_MIN_RATING)
+            }
+
+            if (!filters.platforms.isNullOrEmpty()) {
+                putString(KEY_PLATFORMS, filters.platforms.joinToString(","))
+            } else {
+                remove(KEY_PLATFORMS)
+            }
+
+            if (filters.order != null) {
+                putString(KEY_SORT, filters.order?.name)
+            } else {
+                remove(KEY_SORT)
+            }
+
+            if (!filters.query.isNullOrEmpty()) {
+                putString(KEY_QUERY, filters.query)
+            } else {
+                remove(KEY_QUERY)
+            }
         }
     }
+
 
     fun getFilters(): FiltersDTO {
         val year = prefs.getString(KEY_YEAR, null)

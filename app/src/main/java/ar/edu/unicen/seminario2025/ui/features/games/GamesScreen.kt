@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import ar.edu.unicen.seminario2025.ui.common.EmptyGamesView
 import ar.edu.unicen.seminario2025.ui.common.GameSearchBar
@@ -38,17 +40,17 @@ fun GamesScreen(
     val query = viewModel.query.collectAsState().value
     val error = viewModel.error.collectAsState().value
 
-    if(error != null && !error.isEmpty()){
+    if((error != null && !error.isEmpty()) && !isLoading){
         Box(
             modifier = Modifier.fillMaxSize()
         ){
             ErrorCard(
                 message = error,
                 onRetry = {
-                    viewModel.getGames()
+                    viewModel.onApplyFilters()
                 },
-                modifier = Modifier.align(Alignment.Center)
-
+                modifier = Modifier.align(Alignment.Center) ,
+                icon = ImageVector.vectorResource(id = R.drawable.outline_wifi_tethering_error_24)
             )
         }
 
@@ -79,7 +81,7 @@ fun GamesScreen(
                 tint = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Filtros",
+                text = stringResource(R.string.filters_and_order),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(start = 4.dp)

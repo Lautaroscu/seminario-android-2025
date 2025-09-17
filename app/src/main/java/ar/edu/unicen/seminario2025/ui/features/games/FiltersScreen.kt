@@ -9,7 +9,7 @@ import androidx.navigation.NavController
 @Composable
 fun GamesFiltersScreen(
     viewModel: GamesViewModel,
-    navController: NavController, // <-- pasamos el navController
+    navController: NavController,
 ) {
     val query by viewModel.query.collectAsState()
     val years by viewModel.years.collectAsState()

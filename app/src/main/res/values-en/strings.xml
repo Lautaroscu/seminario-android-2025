@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">seminario2025</string>
+    <string name="title" translatable="false">Hello Worldddd!</string>
+    <string name="game_image" translatable="false">game image</string>
+    <string name="sort_name_asc">Name (A-Z)</string>
+    <string name="sort_name_desc">Name (Z-A)</string>
+    <string name="sort_recent">Most recent</string>
+    <string name="sort_oldest">Oldest</string>
+    <string name="sort_rating_asc">Rating ↑</string>
+    <string name="sort_rating_desc">Rating ↓</string>
+    <string name="sort_metacritic_asc">Metacritic ↑</string>
+    <string name="sort_metacritic_desc">Metacritic ↓</string>
+    <string name="search_placeholder">Search games</string>
+    <string name="all_years">All</string>
+    <string name="release_year">Release year</string>
+    <string name="filters_and_order">Filters and ordering</string>
+    <string name="platforms">Platforms</string>
+    <string name="sort_by">Sort by</string>
+    <string name="apply_filters">Apply</string>
+    <string name="remove_filters">Remove filters</string>
+
+</resources>

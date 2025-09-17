@@ -27,7 +27,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ar.edu.unicen.seminario2025.R
 import ar.edu.unicen.seminario2025.ui.features.games.enums.SortOption
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,6 +39,7 @@ fun GameFiltersAndSort(
     platforms: List<Pair<Int, String>>,
     onApplyFilters: (FiltersDTO) -> Unit,
     savedFilters: FiltersDTO? = null,
+
     modifier: Modifier = Modifier
 ) {
     var expandedYear by remember { mutableStateOf(false) }
@@ -57,6 +60,20 @@ fun GameFiltersAndSort(
     val context = LocalContext.current
     var expandedSort by remember { mutableStateOf(false) }
 
+    val change = filtersChange(
+        FiltersDTO(
+            year = selectedYear,
+            minRating = minRating.takeIf { it != 0f },
+            platforms = selectedPlatforms.takeIf { it.isNotEmpty() }?.toList(),
+            order = selectedSort
+        ),
+        savedFilters ?: FiltersDTO(
+            year = null,
+            minRating = null,
+            platforms = null,
+            order = null
+        )
+    )
 
     Column(
         modifier = modifier
@@ -70,10 +87,10 @@ fun GameFiltersAndSort(
             onExpandedChange = { expandedYear = !expandedYear }
         ) {
             TextField(
-                value = selectedYear?.toString() ?: "Todos",
+                value = selectedYear ?: stringResource(R.string.all_years),
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Año de lanzamiento") },
+                label = { Text(stringResource(R.string.release_year)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedYear) },
                 modifier = Modifier.menuAnchor()
             )
@@ -82,7 +99,7 @@ fun GameFiltersAndSort(
                 onDismissRequest = { expandedYear = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Todos") },
+                    text = { Text(stringResource(R.string.release_year)) },
                     onClick = {
                         selectedYear = null
                         expandedYear = false
@@ -105,14 +122,16 @@ fun GameFiltersAndSort(
             Text("Rating mínimo: ${minRating.toInt()}")
             Slider(
                 value = minRating,
-                onValueChange = { minRating = it },
+                onValueChange = {
+                    minRating = it
+                                },
                 valueRange = 0f..5f,
                 steps = 4
             )
         }
 
         Column {
-            Text("Plataformas")
+            Text(stringResource(R.string.platforms))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -139,7 +158,7 @@ fun GameFiltersAndSort(
                     value = context.getString(selectedSort.labelRes),
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Ordenar por") },
+                    label = { Text(stringResource(R.string.sort_by)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expandedSort) },
                     modifier = Modifier.menuAnchor()
                 )
@@ -172,9 +191,10 @@ fun GameFiltersAndSort(
                                 order = selectedSort
                             )
                         )
-                    }
+                    } ,
+                    enabled = change
                 ) {
-                    Text("Aplicar")
+                    Text(stringResource(R.string.apply_filters))
                 }
                 OutlinedButton(
                     onClick = {
@@ -197,11 +217,15 @@ fun GameFiltersAndSort(
                     ),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Borrar filtros")
+                    Text(stringResource(R.string.remove_filters))
                 }
             }
 
 
         }
     }
+}
+private fun filtersChange(filters: FiltersDTO , savedFilters: FiltersDTO) : Boolean {
+    return filters.query != savedFilters.query || filters.year != savedFilters.year || filters.minRating != savedFilters.minRating || filters.platforms != savedFilters.platforms
+            || filters.order != savedFilters.order
 }

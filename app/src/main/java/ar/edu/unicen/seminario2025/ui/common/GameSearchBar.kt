@@ -10,8 +10,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import ar.edu.unicen.seminario2025.R
 
 @Composable
 fun GameSearchBar(
@@ -31,7 +33,7 @@ fun GameSearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp),
-        placeholder = { Text("Buscar juegos...") },
+        placeholder = { Text(stringResource(R.string.search_placeholder)) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
         trailingIcon = {
             if (text.isNotEmpty()) {
