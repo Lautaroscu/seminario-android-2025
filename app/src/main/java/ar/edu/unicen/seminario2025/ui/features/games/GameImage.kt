@@ -22,6 +22,7 @@ fun GameImage(
         model = imageUrl ?: R.drawable.placeholder,
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
     )
+
 }

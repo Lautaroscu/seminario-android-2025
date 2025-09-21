@@ -34,7 +34,8 @@ import ar.edu.unicen.seminario2025.ui.common.ErrorCard
 fun GameDetailsScreen(
         gameViewModel: GameViewModel,
         gameId : Int,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        goBack : () -> Unit
 ) {
         LaunchedEffect(gameId) {
                 gameId.let { id ->
@@ -62,7 +63,7 @@ fun GameDetailsScreen(
                         }
 
                         else -> {
-                                GameDetailsScreenContent(game)
+                                GameDetailsScreenContent(game  , goBack)
                         }
                 }
 

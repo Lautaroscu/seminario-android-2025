@@ -18,5 +18,6 @@
     <string name="sort_by">Ordenar por</string>
     <string name="apply_filters">Aplicar</string>
     <string name="remove_filters">Borrar filtros</string>
+    <string name="back">Regresar</string>
 
 </resources>

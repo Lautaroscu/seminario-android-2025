@@ -5,5 +5,5 @@ data class FiltersDTO(
     var minRating: Float? = null,
     val platforms: List<Int>? = null,
     var query: String? = null,
-    var order: SortOption? = SortOption.RATING_DESC,
+    var order: SortOption? = null,
 )

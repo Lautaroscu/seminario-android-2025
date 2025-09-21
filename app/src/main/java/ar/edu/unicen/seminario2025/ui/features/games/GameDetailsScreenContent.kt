@@ -2,6 +2,7 @@ package ar.edu.unicen.seminario2025.ui.features.games
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -15,28 +16,35 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ar.edu.unicen.seminario2025.R
 import ar.edu.unicen.seminario2025.ddl.models.games.EsrbRatingDTO
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDetailsDTO
-import ar.edu.unicen.seminario2025.ddl.models.games.PlatformDTO
-import ar.edu.unicen.seminario2025.ddl.models.games.PlatformWrapperDTO
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun GameDetailsScreenContent(
     game: GameDetailsDTO,
+    goBack : () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -45,6 +53,25 @@ fun GameDetailsScreenContent(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
+
+        Row(
+            modifier = Modifier
+                .clickable { goBack() }
+                .padding(8.dp)
+                .align(Alignment.Start)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+                contentDescription = "Back",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = stringResource(R.string.back),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
         game.backgroundImage?.let { imageUrl ->
             GlideImage(
                 model = imageUrl,
@@ -66,9 +93,14 @@ fun GameDetailsScreenContent(
         )
 
         Text(
-            text = "Lanzamiento: ${game.released}",
+            text = "Lanzamiento: ${game.released?.let { 
+                if(it.isEmpty() || it == "null") {
+                    "No disponible"
+                }else{
+                    formatDate(it)
+                }
+            }}",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         game.esrbRating?.let {
@@ -84,23 +116,21 @@ fun GameDetailsScreenContent(
             Text(
                 text = "⭐ ${game.rating} / ${game.ratingTop}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
 
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "(${game.ratingsCount} votos)",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
         game.metacritic?.let { score ->
             Spacer(modifier = Modifier.height(8.dp))
             val metacriticColor = when {
-                score >= 75 -> MaterialTheme.colorScheme.tertiary   // verde adaptado al tema
-                score >= 50 -> MaterialTheme.colorScheme.secondary  // amarillo/naranja adaptado
-                else -> MaterialTheme.colorScheme.error             // rojo adaptado
+                score >= 75 -> MaterialTheme.colorScheme.tertiary
+                score >= 50 -> MaterialTheme.colorScheme.secondary
+                else -> MaterialTheme.colorScheme.error
             }
             Text(
                 text = "Metacritic: $score",
@@ -112,11 +142,11 @@ fun GameDetailsScreenContent(
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        game.platforms?.let { platforms ->
+        game.platforms.let { platforms ->
             Text(
-                text = "Plataformas:",
+                text = stringResource(R.string.platforms),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
             Spacer(modifier = Modifier.height(8.dp))
             FlowRow(
@@ -141,45 +171,25 @@ fun GameDetailsScreenContent(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+
+
         Text(
-            text = "Última actualización: ${game.updated}",
+            text = "Última actualización: ${formatDate(game.updated)}",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
-
-
-@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun GameDetailsPreview() {
-    val gtaV = GameDetailsDTO(
-        id = 3498,
-        slug = "grand-theft-auto-v",
-        name = "Grand Theft Auto V",
-        released = "2013-09-17",
-        backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
-        rating = 4.47,
-        ratingTop = 5,
-        ratingsCount = 4314 + 2394 + 464, // suma de las categorías
-        metacritic = 92,
-        updated = "2025-09-03T13:19:21",
-        esrbRating = EsrbRatingDTO(
-            id = 1,
-            name = "Mature",
-            slug = "mature"
-        ),
-        platforms = listOf(
-            PlatformWrapperDTO(PlatformDTO(4, "PC", "pc")),
-            PlatformWrapperDTO(PlatformDTO(18, "PlayStation 4", "playstation4")),
-            PlatformWrapperDTO(PlatformDTO(1, "Xbox One", "xbox-one"))
-        )
-    )
-
-    MaterialTheme {
-        GameDetailsScreenContent(
-            game = gtaV,
-            modifier = Modifier.fillMaxSize()
-        )
+fun formatDate(dateStr: String): String {
+    return try {
+        val parsed = LocalDateTime.parse(dateStr)
+        parsed.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault()))
+    } catch (e: Exception) {
+        try {
+            LocalDate.parse(dateStr)
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.getDefault()))
+        } catch (e: Exception) {
+            dateStr
+        }
     }
 }
+

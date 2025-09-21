@@ -63,9 +63,9 @@ class FiltersPreferences @Inject constructor(context: Context) {
 
     fun getFilters(): FiltersDTO {
         val year = prefs.getString(KEY_YEAR, null)
-        val rating = prefs.getFloat(KEY_MIN_RATING, 0f)
+        val rating = prefs.getString(KEY_MIN_RATING, null)?.toFloatOrNull()
         val platformsCSV = prefs.getString(KEY_PLATFORMS, "")
-        val platforms = if (platformsCSV.isNullOrEmpty()) emptyList() else platformsCSV.split(",").mapNotNull { it.toIntOrNull() }
+        val platforms = if (platformsCSV.isNullOrEmpty()) null else platformsCSV.split(",").mapNotNull { it.toIntOrNull() }
         val sort = prefs.getString(KEY_SORT, null)
         val sortOption = sort?.let { SortOption.valueOf(it) }
         val query = prefs.getString(KEY_QUERY, null)

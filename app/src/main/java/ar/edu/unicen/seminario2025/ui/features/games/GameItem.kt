@@ -50,7 +50,6 @@ fun GameItem(
                 Text(
                     text = released,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

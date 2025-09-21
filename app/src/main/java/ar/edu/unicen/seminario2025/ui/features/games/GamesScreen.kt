@@ -9,10 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import ar.edu.unicen.seminario2025.ui.common.EmptyGamesView
 import ar.edu.unicen.seminario2025.ui.common.GameSearchBar
 import ar.edu.unicen.seminario2025.R
 import ar.edu.unicen.seminario2025.ui.common.ErrorCard
@@ -32,8 +29,8 @@ import ar.edu.unicen.seminario2025.ui.common.ErrorCard
 @Composable
 fun GamesScreen(
     viewModel: GamesViewModel,
-    goDetails : (gameId : Int) -> Unit ,
-    goFilters : () -> Unit
+    goDetails: (Int) -> Unit,
+    goFilters: () -> Unit
 ) {
     val games = viewModel.games.collectAsState().value
     val isLoading = viewModel.loading.collectAsState().value

@@ -39,7 +39,6 @@ fun GameFiltersAndSort(
     platforms: List<Pair<Int, String>>,
     onApplyFilters: (FiltersDTO) -> Unit,
     savedFilters: FiltersDTO? = null,
-
     modifier: Modifier = Modifier
 ) {
     var expandedYear by remember { mutableStateOf(false) }
@@ -55,7 +54,7 @@ fun GameFiltersAndSort(
     }
 
     var selectedSort by remember {
-        mutableStateOf(savedFilters?.order ?: SortOption.RATING_DESC)
+        mutableStateOf(savedFilters?.order)
     }
     val context = LocalContext.current
     var expandedSort by remember { mutableStateOf(false) }
@@ -107,8 +106,7 @@ fun GameFiltersAndSort(
                 )
                 years.forEach { year ->
                     DropdownMenuItem(
-                        text = {Text(year.toString())
-                        },
+                        text = { Text(year.toString()) },
                         onClick = {
                             selectedYear = year.toString()
                             expandedYear = false
@@ -122,9 +120,7 @@ fun GameFiltersAndSort(
             Text("Rating mínimo: ${minRating.toInt()}")
             Slider(
                 value = minRating,
-                onValueChange = {
-                    minRating = it
-                                },
+                onValueChange = { minRating = it },
                 valueRange = 0f..5f,
                 steps = 4
             )
@@ -149,13 +145,13 @@ fun GameFiltersAndSort(
                 }
             }
 
-
             ExposedDropdownMenuBox(
                 expanded = expandedSort,
                 onExpandedChange = { expandedSort = !expandedSort }
             ) {
                 TextField(
-                    value = context.getString(selectedSort.labelRes),
+                    value = selectedSort?.let { stringResource(it.labelRes) }
+                        ?: stringResource(R.string.sort_rating_desc),
                     onValueChange = {},
                     readOnly = true,
                     label = { Text(stringResource(R.string.sort_by)) },
@@ -177,9 +173,12 @@ fun GameFiltersAndSort(
                     }
                 }
             }
+
             Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp , bottom = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 4.dp),
             ) {
                 Button(
                     onClick = {
@@ -191,7 +190,7 @@ fun GameFiltersAndSort(
                                 order = selectedSort
                             )
                         )
-                    } ,
+                    },
                     enabled = change
                 ) {
                     Text(stringResource(R.string.apply_filters))
@@ -210,22 +209,20 @@ fun GameFiltersAndSort(
                         minRating = 0f
                         selectedPlatforms.clear()
                         selectedSort = SortOption.RATING_DESC
-                    },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                    }
                 ) {
                     Text(stringResource(R.string.remove_filters))
                 }
             }
-
-
         }
     }
 }
-private fun filtersChange(filters: FiltersDTO , savedFilters: FiltersDTO) : Boolean {
-    return filters.query != savedFilters.query || filters.year != savedFilters.year || filters.minRating != savedFilters.minRating || filters.platforms != savedFilters.platforms
-            || filters.order != savedFilters.order
+
+private fun filtersChange(filters: FiltersDTO, savedFilters: FiltersDTO): Boolean {
+    return filters.query != savedFilters.query ||
+            filters.year != savedFilters.year ||
+            filters.minRating != savedFilters.minRating ||
+            filters.platforms != savedFilters.platforms ||
+            filters.order != savedFilters.order
 }
+

@@ -10,7 +10,7 @@ data class GameDetailsDTO(
     @SerializedName("name")
     val name: String,
     @SerializedName("released")
-    val released: String,
+    val released: String? = null,
     @SerializedName("background_image")
     val backgroundImage: String?,
     @SerializedName("rating")
@@ -26,5 +26,5 @@ data class GameDetailsDTO(
     @SerializedName("esrbRating")
     val esrbRating: EsrbRatingDTO?,
     @SerializedName("platforms")
-    val platforms: List<PlatformWrapperDTO>?
+    val platforms: List<PlatformWrapperDTO>,
 )

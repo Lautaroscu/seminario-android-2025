@@ -10,7 +10,7 @@ suspend fun <T> safeApiCall(
     return try {
         ApiResult.Success(apiCall())
     } catch (e: IOException) {
-        ApiResult.Error("Error de red, revisá tu conexió",e)
+        ApiResult.Error("Error de red, revisá tu conexión",e)
     } catch (e: HttpException) {
         ApiResult.Error("Error del servidor: ${e.code()}", e)
     } catch (e: Exception) {

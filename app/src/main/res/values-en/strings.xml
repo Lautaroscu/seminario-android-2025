@@ -19,5 +19,6 @@
     <string name="sort_by">Sort by</string>
     <string name="apply_filters">Apply</string>
     <string name="remove_filters">Remove filters</string>
+    <string name="back">Back</string>
 
 </resources>
