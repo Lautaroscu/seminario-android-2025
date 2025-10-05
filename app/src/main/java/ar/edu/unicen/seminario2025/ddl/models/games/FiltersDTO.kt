@@ -1,4 +1,6 @@
+import androidx.annotation.Keep
 import ar.edu.unicen.seminario2025.ui.features.games.enums.SortOption
+@Keep
 
 data class FiltersDTO(
     var year: String? = null,

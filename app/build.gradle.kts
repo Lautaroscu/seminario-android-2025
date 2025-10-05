@@ -14,6 +14,10 @@ val localProperties = gradleLocalProperties(rootDir,
 val baseUrl: String = "https://api.rawg.io/api/"
 val apiKey: String = "e0358f4b4c7f42e8a25b9601312d06b5"
 
+val versionMajor = 1;
+val versionMinor = 0;
+val versionPatch = 0;
+
 android {
     namespace = "ar.edu.unicen.seminario2025"
     compileSdk = 36
@@ -22,8 +26,8 @@ android {
         applicationId = "ar.edu.unicen.seminario2025"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = versionMajor * 100 + versionMinor * 10 + versionPatch
+        versionName = "$versionMajor.$versionMinor.$versionPatch"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

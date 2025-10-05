@@ -19,3 +19,27 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Retrofit / OkHttp
+-keep class retrofit2.** { *; }
+-keep class okhttp3.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+# Gson
+-keep class com.google.gson.** { *; }
+-keep class * extends com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Hilt / Dagger
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class dagger.** { *; }
+
+# Glide
+-keep class com.bumptech.glide.** { *; }
+
+-keep class ar.edu.unicen.seminario2025.ddl.models.games.** { *; }
+

@@ -1,6 +1,5 @@
 package ar.edu.unicen.seminario2025.ui.features.games
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +20,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,10 +31,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ar.edu.unicen.seminario2025.R
-import ar.edu.unicen.seminario2025.ddl.models.games.EsrbRatingDTO
 import ar.edu.unicen.seminario2025.ddl.models.games.GameDetailsDTO
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -44,9 +46,12 @@ import java.util.Locale
 @Composable
 fun GameDetailsScreenContent(
     game: GameDetailsDTO,
-    goBack : () -> Unit,
+    goBack: () -> Unit,
+    shareGame: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var expandedDescription by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -72,6 +77,7 @@ fun GameDetailsScreenContent(
                 modifier = Modifier.padding(start = 4.dp)
             )
         }
+
         game.backgroundImage?.let { imageUrl ->
             GlideImage(
                 model = imageUrl,
@@ -88,18 +94,16 @@ fun GameDetailsScreenContent(
         Text(
             text = game.name,
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold ,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
 
         Text(
-            text = "Lanzamiento: ${game.released?.let { 
-                if(it.isEmpty() || it == "null") {
-                    "No disponible"
-                }else{
-                    formatDate(it)
+            text = stringResource(R.string.released) + ": ${
+                game.released?.let {
+                    if (it.isEmpty() || it == "null") "No disponible" else formatDate(it)
                 }
-            }}",
+            }",
             style = MaterialTheme.typography.bodyMedium,
         )
 
@@ -116,7 +120,6 @@ fun GameDetailsScreenContent(
             Text(
                 text = "⭐ ${game.rating} / ${game.ratingTop}",
                 style = MaterialTheme.typography.bodyMedium,
-
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -140,7 +143,6 @@ fun GameDetailsScreenContent(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
 
         game.platforms.let { platforms ->
             Text(
@@ -169,16 +171,62 @@ fun GameDetailsScreenContent(
             }
         }
 
+        game.descriptionRaw?.takeIf { it.isNotBlank() }?.let { desc ->
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(R.string.description),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = extractLocalizedDescription(desc),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            if (desc.length > 300) {
+                Spacer(modifier = Modifier.height(4.dp))
+                val textButton = if (expandedDescription) stringResource(R.string.see_less) else stringResource(R.string.see_more)
+                Text(
+                    text = textButton,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.clickable { expandedDescription = !expandedDescription }
+                )
+            }
+        }
+
+
         Spacer(modifier = Modifier.height(24.dp))
 
+        Button(
+            onClick = { shareGame() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.outline_share_24),
+                contentDescription = stringResource(R.string.share),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.share) + " " + stringResource(R.string.game))
+        }
 
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Última actualización: ${formatDate(game.updated)}",
+            text = stringResource(R.string.last_updated) + ": ${formatDate(game.updated)}",
             style = MaterialTheme.typography.bodySmall,
         )
     }
 }
+
 fun formatDate(dateStr: String): String {
     return try {
         val parsed = LocalDateTime.parse(dateStr)
@@ -192,4 +240,16 @@ fun formatDate(dateStr: String): String {
         }
     }
 }
+fun extractLocalizedDescription(fullDescription: String): String {
+    val lang = Locale.getDefault().language
 
+    return when {
+        lang.startsWith("es") && fullDescription.contains("Español") -> {
+            fullDescription.substringAfter("Español").trim()
+        }
+        lang.startsWith("en") -> {
+            fullDescription.substringBefore("Español").trim()
+        }
+        else -> fullDescription.trim()
+    }
+}

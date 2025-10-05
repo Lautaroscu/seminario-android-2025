@@ -7,10 +7,10 @@
       </SelectionState>
       <SelectionState runConfigName="AppActivity">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-09-08T21:50:36.631561900Z">
+        <DropdownSelection timestamp="2025-10-05T21:52:42.415845500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Lauta\.android\avd\Medium_Phone.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=ZY32GLXPPC" />
             </handle>
           </Target>
         </DropdownSelection>

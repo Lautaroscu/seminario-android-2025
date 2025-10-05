@@ -1,6 +1,9 @@
 package ar.edu.unicen.seminario2025.ddl.models.games
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+
+@Keep
 
 data class GameDetailsDTO(
     @SerializedName("id")
@@ -27,4 +30,8 @@ data class GameDetailsDTO(
     val esrbRating: EsrbRatingDTO?,
     @SerializedName("platforms")
     val platforms: List<PlatformWrapperDTO>,
+    @SerializedName("description_raw")
+    val descriptionRaw : String? = null,
+    @SerializedName("website")
+    val website : String? = null,
 )

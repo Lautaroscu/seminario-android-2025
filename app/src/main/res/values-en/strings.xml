@@ -20,5 +20,13 @@
     <string name="apply_filters">Apply</string>
     <string name="remove_filters">Remove filters</string>
     <string name="back">Back</string>
+    <string name="share">Share</string>
+    <string name="game">Game</string>
+    <string name="see_less">See less</string>
+    <string name="see_more">See more</string>
+    <string name="description">Description</string>
+    <string name="released">Released</string>
+    <string name="last_updated">Last updated</string>
+    <string name="share_message">Take a look at this game!</string>
 
 </resources>

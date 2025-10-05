@@ -19,5 +19,12 @@
     <string name="apply_filters">Aplicar</string>
     <string name="remove_filters">Borrar filtros</string>
     <string name="back">Regresar</string>
-
+    <string name="share">Compartir</string>
+    <string name="game">Juego</string>
+    <string name="see_less">Ver menos</string>
+    <string name="see_more">Ver mas</string>
+    <string name="description">Descripción</string>
+    <string name="released">Lanzamiento</string>
+    <string name="last_updated">Ultima actualizacion</string>
+    <string name="share_message">¡Mirá este juego!</string>
 </resources>

@@ -1,7 +1,8 @@
 package ar.edu.unicen.seminario2025.ddl.models.games
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
-
+@Keep
 data class GameDTO(
     @SerializedName("id")
     val id: Int,
